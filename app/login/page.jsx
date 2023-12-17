@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import HealthOsLogo from "../../public/assets/images/logo-text.png";
 
+import { getAccessToken, getRefreshToken } from "@/common/helpers/HttpKit";
 import FormikErrorBox from "@/components/shared/ui/FormikErrorBox";
 import { Button } from "@/components/shared/ui/button";
 import {
@@ -17,6 +18,8 @@ import {
 import { Input } from "@/components/shared/ui/input";
 import { Label } from "@/components/shared/ui/label";
 import { useFormik } from "formik";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { object, string } from "yup";
 
 const yupSchema = object({
@@ -30,6 +33,8 @@ const yupSchema = object({
 });
 
 export default function Page() {
+  const router = useRouter();
+  console.log({ access: getAccessToken(), refresh: getRefreshToken() });
   const [initialValues, setInitialValues] = useState({
     phone: "",
     password: "",
@@ -37,8 +42,19 @@ export default function Page() {
   const formik = useFormik({
     initialValues,
     validationSchema: yupSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
+
+      const result = await signIn("credentials", {
+        redirect: true,
+        id: values.phone,
+        password: values.password,
+        callbackUrl: "/purchase",
+      });
+      // if (result.ok) {
+      //   router.push("/purchase");
+      // }
+      console.log({ result });
     },
   });
   // const handleSubmit = (e) => {
@@ -49,6 +65,7 @@ export default function Page() {
   //   };
   //   console.log(data);
   // };
+
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div>
