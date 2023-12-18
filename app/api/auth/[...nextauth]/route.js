@@ -99,7 +99,7 @@ export const authOptions = {
   session: {
     maxAge: 100 * 24 * 60 * 60,
   },
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

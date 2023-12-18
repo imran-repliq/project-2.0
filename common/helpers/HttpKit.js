@@ -41,7 +41,7 @@ const getToken = async () => {
 };
 
 export const HttpKit = axios.create({
-  baseURL: "https://dev.healthosbd.com",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
